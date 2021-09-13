@@ -1,0 +1,26 @@
+#!/bin/bash
+
+if [ $# -gt 1 ]; then
+  echo "Only one ip can be passed!!!"
+  echo "Example: gibi 192.168.122.101"
+  exit 0
+fi
+
+ip=$1
+
+if [ ! -n "$ip" ]; then
+  echo "gibi version 0.0.1 by xjs"
+  echo "Please visit https://github.com/xieyanker/gibi"
+  exit 0
+fi
+
+link_line=`ip a | grep "$ip" -B 1000 | grep 'link/' | tail -n 1`
+
+if [ ! -n "$link_line" ]; then
+  echo "Can not find the interface by ip $ip, please retry with the correct ip!"
+  echo "Example: gibi 192.168.122.101"
+  exit 0  
+fi
+
+interface=`ip a | grep "$link_line" -B 1 | head -n 1 | awk '{print $2}' | awk -F ':' '{print $1}' |  awk -F '@' '{print $1}'`
+echo $interface
